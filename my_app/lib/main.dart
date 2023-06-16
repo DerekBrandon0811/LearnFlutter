@@ -28,7 +28,9 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color.fromARGB(255, 0, 0, 0),
+            background: const Color.fromARGB(255, 20, 20, 20)),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
@@ -64,53 +66,126 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 39, 32, 32),
+      backgroundColor: const Color.fromARGB(255, 20, 20, 20),
       appBar: AppBar(
         title: const Text("Macrohard From Don't"),
         centerTitle: false,
       ),
-      body: const Column(
-        children: [
-          Row(
-            children: [
-              Flexible(
-                fit: FlexFit.tight,
-                child: Row(
-                  children: [
-                    Padding(
+      body: Center(
+        child: Column(
+          children: [
+            const Row(
+              children: [
+                Flexible(
+                  fit: FlexFit.tight,
+                  child: Row(
+                    children: [
+                      Padding(
+                          padding: EdgeInsets.all(12.0),
+                          child: CircleAvatar(
+                            backgroundColor: Colors.deepPurple,
+                          )),
+                      Padding(
+                        padding: EdgeInsets.all(4.0),
+                        child: Text(
+                          "Gorptillius IV",
+                          style: TextStyle(
+                              color: Color.fromRGBO(255, 255, 255, 1)),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Flexible(
+                  fit: FlexFit.tight,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Padding(
                         padding: EdgeInsets.all(12.0),
-                        child: CircleAvatar(
-                          backgroundColor: Colors.deepPurple,
-                        )),
-                    Padding(
-                      padding: EdgeInsets.all(4.0),
-                      child: Text(
-                        "Gorptilius III",
-                        style:
-                            TextStyle(color: Color.fromRGBO(255, 255, 255, 1)),
+                        child: Icon(
+                          Icons.search,
+                          color: Color.fromARGB(255, 255, 255, 255),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Flexible(
+              child: ListView(
+                children: const [
+                  ListTile(
+                    leading:
+                        Icon(Icons.wb_sunny_outlined, color: Colors.deepPurple),
+                    title: Text("My Day"),
+                    textColor: Color.fromARGB(255, 200, 200, 200),
+                    trailing: Text("4"),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.star_border, color: Colors.deepPurple),
+                    title: Text("Important"),
+                    textColor: Color.fromARGB(255, 200, 200, 200),
+                    trailing: Text("5"),
+                  ),
+                  ListTile(
+                    leading:
+                        Icon(Icons.calendar_today, color: Colors.deepPurple),
+                    title: Text("Planned"),
+                    textColor: Color.fromARGB(255, 200, 200, 200),
+                    trailing: Text("2"),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.home, color: Colors.deepPurple),
+                    title: Text("Tasks"),
+                    textColor: Color.fromARGB(255, 200, 200, 200),
+                    trailing: Text("8M"),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                    child: Divider(color: Colors.grey),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.list, color: Colors.deepPurple),
+                    title: Text("Projects"),
+                    textColor: Color.fromARGB(255, 200, 200, 200),
+                    trailing: Text("3"),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        surfaceTintColor: const Color.fromARGB(255, 20, 20, 20),
+        color: const Color.fromARGB(255, 20, 20, 20),
+        padding: const EdgeInsets.fromLTRB(4, 0, 0, 0),
+        child: TextButton(
+          onPressed: () => print("hi world"),
+          style: ButtonStyle(
+            overlayColor: MaterialStateProperty.resolveWith<Color?>(
+                (Set<MaterialState> states) {
+              return Theme.of(context).colorScheme.background;
+            }),
+          ),
+          child: const Row(
+            children: [
+              Padding(
+                padding: EdgeInsets.fromLTRB(0, 5, 20, 5),
+                child: Icon(
+                  Icons.add,
+                  color: Color.fromARGB(255, 100, 100, 100),
                 ),
               ),
-              Flexible(
-                fit: FlexFit.tight,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(12.0),
-                      child: Icon(
-                        Icons.search,
-                        color: Color.fromARGB(255, 255, 255, 255),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              Text(
+                "New List",
+                style: TextStyle(color: Color.fromARGB(255, 100, 100, 100)),
+              )
             ],
           ),
-        ],
+        ),
       ),
     );
   }

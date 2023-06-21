@@ -57,6 +57,26 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  late List<Widget> myListTiles;
+
+  @override
+  void initState() {
+    super.initState();
+    myListTiles = [
+      const ListItem(
+          title: "My Day", notifCount: "4", iconType: Icons.wb_sunny_outlined),
+      const ListItem(
+          title: "Important", notifCount: "5", iconType: Icons.star_border),
+      const ListItem(
+          title: "Planned", notifCount: "2", iconType: Icons.calendar_today),
+      const ListItem(title: "Tasks", notifCount: "8M", iconType: Icons.home),
+      const Padding(
+        padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+        child: Divider(color: Colors.grey),
+      ),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -68,8 +88,12 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 20, 20, 20),
       appBar: AppBar(
-        title: const Text("Macrohard From Don't"),
+        title: const Text(
+          "Macrohard From Don't",
+          style: TextStyle(color: Colors.white),
+        ),
         centerTitle: false,
+        backgroundColor: const Color.fromARGB(255, 20, 20, 20),
       ),
       body: Center(
         child: Column(
@@ -114,46 +138,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
             Flexible(
-              child: ListView(
-                children: const [
-                  ListTile(
-                    leading:
-                        Icon(Icons.wb_sunny_outlined, color: Colors.deepPurple),
-                    title: Text("My Day"),
-                    textColor: Color.fromARGB(255, 200, 200, 200),
-                    trailing: Text("4"),
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.star_border, color: Colors.deepPurple),
-                    title: Text("Important"),
-                    textColor: Color.fromARGB(255, 200, 200, 200),
-                    trailing: Text("5"),
-                  ),
-                  ListTile(
-                    leading:
-                        Icon(Icons.calendar_today, color: Colors.deepPurple),
-                    title: Text("Planned"),
-                    textColor: Color.fromARGB(255, 200, 200, 200),
-                    trailing: Text("2"),
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.home, color: Colors.deepPurple),
-                    title: Text("Tasks"),
-                    textColor: Color.fromARGB(255, 200, 200, 200),
-                    trailing: Text("8M"),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                    child: Divider(color: Colors.grey),
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.list, color: Colors.deepPurple),
-                    title: Text("Projects"),
-                    textColor: Color.fromARGB(255, 200, 200, 200),
-                    trailing: Text("3"),
-                  ),
-                ],
-              ),
+              child: ListView(children: myListTiles),
             ),
           ],
         ),
@@ -163,10 +148,14 @@ class _MyHomePageState extends State<MyHomePage> {
         color: const Color.fromARGB(255, 20, 20, 20),
         padding: const EdgeInsets.fromLTRB(4, 0, 0, 0),
         child: TextButton(
-          onPressed: () => print("hi world"),
+          onPressed: () => setState(() {
+            myListTiles.add(ListItem(
+                title: "New Item ${myListTiles.length}",
+                notifCount: "0",
+                iconType: Icons.new_label_outlined));
+          }),
           style: ButtonStyle(
-            overlayColor: MaterialStateProperty.resolveWith<Color?>(
-                (Set<MaterialState> states) {
+            overlayColor: MaterialStateProperty.resolveWith<Color?>((_) {
               return Theme.of(context).colorScheme.background;
             }),
           ),
@@ -190,3 +179,29 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
+class ListItem extends StatelessWidget {
+  const ListItem(
+      {super.key,
+      required this.title,
+      required this.notifCount,
+      required this.iconType});
+
+  final String title;
+  final String notifCount;
+  final IconData iconType;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: Icon(iconType, color: Colors.deepPurple),
+      title: Text(title),
+      textColor: const Color.fromARGB(255, 200, 200, 200),
+      trailing: Text(notifCount),
+    );
+  }
+}
+
+// Darken New List on hover
+// Add New List functionality
+// Dynamically add TodoLists to ListView when New List button clicked

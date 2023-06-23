@@ -59,6 +59,14 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   late List<Widget> myListTiles;
 
+  void insertTile() {
+    myListTiles.add(ListItem(
+        title: "New Item ${myListTiles.length}",
+        notifCount: "0",
+        iconType: Icons.new_label_outlined));
+    setState(() {});
+  }
+
   @override
   void initState() {
     super.initState();
@@ -138,7 +146,9 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
             Flexible(
-              child: ListView(children: myListTiles),
+              child: ListBuilder(
+                listItems: myListTiles,
+              ),
             ),
           ],
         ),
@@ -148,12 +158,7 @@ class _MyHomePageState extends State<MyHomePage> {
         color: const Color.fromARGB(255, 20, 20, 20),
         padding: const EdgeInsets.fromLTRB(4, 0, 0, 0),
         child: TextButton(
-          onPressed: () => setState(() {
-            myListTiles.add(ListItem(
-                title: "New Item ${myListTiles.length}",
-                notifCount: "0",
-                iconType: Icons.new_label_outlined));
-          }),
+          onPressed: () => insertTile(),
           style: ButtonStyle(
             overlayColor: MaterialStateProperty.resolveWith<Color?>((_) {
               return Theme.of(context).colorScheme.background;
@@ -199,6 +204,26 @@ class ListItem extends StatelessWidget {
       textColor: const Color.fromARGB(255, 200, 200, 200),
       trailing: Text(notifCount),
     );
+  }
+}
+
+class ListBuilder extends StatefulWidget {
+  const ListBuilder({super.key, required this.listItems});
+
+  final List<Widget> listItems;
+
+  @override
+  State<ListBuilder> createState() => ListBuilderState();
+}
+
+class ListBuilderState extends State<ListBuilder> {
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+        itemCount: widget.listItems.length,
+        itemBuilder: (_, index) {
+          return widget.listItems[index];
+        });
   }
 }
 

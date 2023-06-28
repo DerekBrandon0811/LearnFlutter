@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 void main() {
   runApp(const MyApp());
@@ -221,8 +222,26 @@ class ListBuilderState extends State<ListBuilder> {
   Widget build(BuildContext context) {
     return ListView.builder(
         itemCount: widget.listItems.length,
-        itemBuilder: (_, index) {
-          return widget.listItems[index];
+        itemBuilder: (context, index) {
+          final item = widget.listItems[index];
+          return Slidable(
+            key: Key('$item'),
+            endActionPane: ActionPane(
+              motion: const ScrollMotion(),
+              children: [
+                SlidableAction(
+                  onPressed: (context) {
+                    setState(() {
+                      widget.listItems.removeAt(index);
+                    });
+                  },
+                  backgroundColor: Colors.red,
+                  icon: Icons.delete,
+                )
+              ],
+            ),
+            child: item,
+          );
         });
   }
 }

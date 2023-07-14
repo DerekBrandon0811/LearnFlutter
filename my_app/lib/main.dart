@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:macrohard/task_page.dart';
-import 'package:macrohard/list_builder.dart';
+import 'package:provider/provider.dart';
+import 'package:macrohard/pages/task_page.dart';
+import 'package:macrohard/models/project_list_model.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: "Macrohard From Don\'t",
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -35,7 +36,9 @@ class MyApp extends StatelessWidget {
             background: const Color.fromARGB(255, 20, 20, 20)),
         useMaterial3: true,
       ),
-      home: const HomePage(),
+      home: ChangeNotifierProvider(
+          create: (BuildContext context) => ProjectListModel(),
+          child: const HomePage()),
     );
   }
 }
@@ -57,39 +60,6 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  late List<Widget> listItems;
-
-  void insertTile(BuildContext context) {
-    ListItem newItem = ListItem(
-        title: "Untitled List ${listItems.length}",
-        taskCount: "0",
-        iconType: Icons.new_label_outlined);
-    listItems.add(newItem);
-    setState(() {});
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const TaskPage()),
-    );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    listItems = [
-      const ListItem(
-          title: "My Day", taskCount: "4", iconType: Icons.wb_sunny_outlined),
-      const ListItem(
-          title: "Important", taskCount: "5", iconType: Icons.star_border),
-      const ListItem(
-          title: "Planned", taskCount: "2", iconType: Icons.calendar_today),
-      const ListItem(title: "Tasks", taskCount: "8M", iconType: Icons.home),
-      const Padding(
-        padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-        child: Divider(color: Colors.grey),
-      ),
-    ];
-  }
-
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -111,81 +81,96 @@ class HomePageState extends State<HomePage> {
       body: Center(
         child: Column(
           children: [
-            const Row(
-              children: [
-                Flexible(
-                  fit: FlexFit.tight,
-                  child: Row(
-                    children: [
-                      Padding(
-                          padding: EdgeInsets.all(12.0),
-                          child: CircleAvatar(
-                            backgroundColor: Colors.deepPurple,
-                          )),
-                      Padding(
-                        padding: EdgeInsets.all(4.0),
-                        child: Text(
-                          "Gorptillius IV",
-                          style: TextStyle(
-                              color: Color.fromRGBO(255, 255, 255, 1)),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Flexible(
-                  fit: FlexFit.tight,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.all(12.0),
-                        child: Icon(
-                          Icons.search,
-                          color: Color.fromARGB(255, 255, 255, 255),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+            projectsHeader(),
             Flexible(
-              child: ListBuilder(
-                listItems: listItems,
+              child: Consumer<ProjectListModel>(
+                builder: (context, plModel, child) => plModel.listBuilder,
               ),
             ),
           ],
         ),
       ),
-      bottomNavigationBar: BottomAppBar(
-        surfaceTintColor: const Color.fromARGB(255, 20, 20, 20),
-        color: const Color.fromARGB(255, 20, 20, 20),
-        padding: const EdgeInsets.fromLTRB(4, 0, 0, 0),
-        child: TextButton(
-          onPressed: () => insertTile(context),
-          style: ButtonStyle(
-            overlayColor: MaterialStateProperty.resolveWith<Color?>((_) {
-              return Theme.of(context).colorScheme.background;
-            }),
-          ),
-          child: const Row(
+      bottomNavigationBar: projectsAppBar(context),
+    );
+  }
+
+  Widget projectsHeader() {
+    return const Row(
+      children: [
+        Flexible(
+          fit: FlexFit.tight,
+          child: Row(
             children: [
               Padding(
-                padding: EdgeInsets.fromLTRB(0, 5, 20, 5),
-                child: Icon(
-                  Icons.add,
-                  color: Color.fromARGB(255, 100, 100, 100),
+                  padding: EdgeInsets.all(12.0),
+                  child: CircleAvatar(
+                    backgroundColor: Colors.deepPurple,
+                  )),
+              Padding(
+                padding: EdgeInsets.all(4.0),
+                child: Text(
+                  "Gorptillius IV",
+                  style: TextStyle(color: Color.fromRGBO(255, 255, 255, 1)),
                 ),
               ),
-              Text(
-                "New List",
-                style: TextStyle(color: Color.fromARGB(255, 100, 100, 100)),
-              )
             ],
           ),
         ),
-      ),
+        Flexible(
+          fit: FlexFit.tight,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Padding(
+                padding: EdgeInsets.all(12.0),
+                child: Icon(
+                  Icons.search,
+                  color: Color.fromARGB(255, 255, 255, 255),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget projectsAppBar(BuildContext context) {
+    return BottomAppBar(
+      surfaceTintColor: const Color.fromARGB(255, 20, 20, 20),
+      color: const Color.fromARGB(255, 20, 20, 20),
+      padding: const EdgeInsets.fromLTRB(4, 0, 0, 0),
+      child: Consumer<ProjectListModel>(
+          builder: (context, plModel, child) => TextButton(
+                onPressed: () {
+                  plModel.add();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const TaskPage()),
+                  );
+                },
+                style: ButtonStyle(
+                  overlayColor: MaterialStateProperty.resolveWith<Color?>((_) {
+                    return Theme.of(context).colorScheme.background;
+                  }),
+                ),
+                child: const Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0, 5, 20, 5),
+                      child: Icon(
+                        Icons.add,
+                        color: Color.fromARGB(255, 100, 100, 100),
+                      ),
+                    ),
+                    Text(
+                      "New List",
+                      style:
+                          TextStyle(color: Color.fromARGB(255, 100, 100, 100)),
+                    )
+                  ],
+                ),
+              )),
     );
   }
 }

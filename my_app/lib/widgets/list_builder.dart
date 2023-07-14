@@ -1,45 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
-class ListItem extends StatelessWidget {
-  const ListItem({
-    super.key,
-    required this.title,
-    required this.taskCount,
-    required this.iconType,
-  });
-
-  final String title;
-  final String taskCount;
-  final IconData iconType;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: Icon(iconType, color: Colors.deepPurple),
-      title: Text(title),
-      textColor: const Color.fromARGB(255, 200, 200, 200),
-      trailing: Text(taskCount),
-    );
-  }
-}
-
 class ListBuilder extends StatefulWidget {
-  const ListBuilder({super.key, required this.listItems});
+  const ListBuilder({super.key, required this.items});
 
-  final List<Widget> listItems;
+  final List<Widget> items;
 
   @override
   State<ListBuilder> createState() => ListBuilderState();
 }
 
 class ListBuilderState extends State<ListBuilder> {
+  static const staticListLen = 4;
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-        itemCount: widget.listItems.length,
+        itemCount: widget.items.length,
         itemBuilder: (context, index) {
-          final item = widget.listItems[index];
+          final item = widget.items[index];
+          if (index <= staticListLen) {
+            return item;
+          }
           return Slidable(
             key: Key('$item'),
             endActionPane: ActionPane(
@@ -48,7 +30,7 @@ class ListBuilderState extends State<ListBuilder> {
                 SlidableAction(
                   onPressed: (context) {
                     setState(() {
-                      widget.listItems.removeAt(index);
+                      widget.items.removeAt(index);
                     });
                   },
                   backgroundColor: Colors.red,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:macrohard/list_builder.dart';
+import 'package:macrohard/widgets/project_item.dart';
+import 'package:macrohard/widgets/list_builder.dart';
 
 class TaskPage extends StatefulWidget {
   const TaskPage({super.key});
@@ -12,10 +13,8 @@ class TaskPageState extends State<TaskPage> {
   late List<Widget> taskItems;
 
   void insertTile(BuildContext context) {
-    taskItems.add(const ListItem(
-        title: "Untitled Task",
-        taskCount: "0",
-        iconType: Icons.check_box_outline_blank));
+    taskItems.add(const ProjectItem(
+        title: "Untitled Task", iconType: Icons.check_box_outline_blank));
     setState(() {});
   }
 
@@ -23,7 +22,6 @@ class TaskPageState extends State<TaskPage> {
   void initState() {
     super.initState();
     taskItems = [];
-    //widget.listItem.title = "Untitled List";
   }
 
   @override
@@ -64,7 +62,7 @@ class TaskPageState extends State<TaskPage> {
             ),
             Flexible(
               child: ListBuilder(
-                listItems: taskItems,
+                items: taskItems,
               ),
             ),
           ],
